@@ -1,4 +1,5 @@
 require("dotenv").config();
+import request from "request";
 
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
@@ -37,7 +38,7 @@ let postWebhook = (req, res) => {
     if (body.object === "page") {
 
         //iterates
-        body.entry.forEach(function(entry) {
+        body.entry.forEach(function (entry) {
 
             //gets
             let webhook_event = entry.messaging[0];
@@ -46,6 +47,14 @@ let postWebhook = (req, res) => {
             //Get the
             let sender_psid = webhook_event.sender.id;
             console.log('Sender PSID: ' + sender_psid);
+
+            //check if the event
+            //pass the event
+            if (webhook_event.message) {
+                handleMessage(sender_psid, webhook_event.message);
+            } else if (webhook_event.postback) {
+                handlePostback(sender_psid, webhook_event.postback);
+            }
         })
 
         // Returns a '200 OK' response to all requests
@@ -62,6 +71,19 @@ let postWebhook = (req, res) => {
 // Handles messages events
 function handleMessage(sender_psid, received_message) {
 
+    let response;
+
+    //check
+    if (received_message.text) {
+        console.log(received_message.text);
+
+        response = {
+            "text": `You just sending me "${message.text}". How cute~~`
+        }
+    }
+
+    //send the response
+    callSendAPI(sender_psid, response);
 }
 
 // Handle messaging_postback events
@@ -71,7 +93,27 @@ function handlePostback(sender_psid, received_postback) {
 
 // Send reponse messages via the Send API
 function callSendAPI(sender_psid, response) {
+    let request_body = {
+        "recipient": {
+            "id": sender_psid
+        },
+        "message": response
+    }
 
+    //Send the HTTP
+    request({
+        "uri": "http://grap.facebook.com/v2.6/me/messages",
+        "qs": { "access_token": PAGE_ACCESS_TOKEN },
+        "method": "POST",
+        "json": request_body
+    }, (err, res, body) => {
+        if (!err) {
+            console.log('message sent')
+        } else {
+            console.log('Unable to send message: ' + err)
+        }
+    }
+    )
 }
 
 
