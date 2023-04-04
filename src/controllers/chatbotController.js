@@ -78,7 +78,7 @@ function handleMessage(sender_psid, received_message) {
         console.log(received_message.text);
 
         response = {
-            "text": `You just sending me "${message.text}". How cute~~`
+            "text": `You just sending me "${received_message.text}". How cute~~`
         }
     }
 
