@@ -90,19 +90,19 @@ function handleMessage(sender_psid, received_message) {
                     "elements": [{
                         "title": "Đây có phải là bức ảnh của bạn không?",
                         "subtitle": "Nhấn nút ở dưới để",
-                        "image_url": attachment_url,
-                        "buttons": [
-                            {
-                                "type": "postback",
-                                "title": "Yes!",
-                                "payload": "yes",
-                            },
-                            {
-                                "type": "postback",
-                                "title": "No!",
-                                "payload": "no",
-                            }
-                        ]
+                        "image_url": attachment_url
+                        // "buttons": [
+                        //     {
+                        //         "type": "postback",
+                        //         "title": "Yes!",
+                        //         "payload": "yes",
+                        //     },
+                        //     {
+                        //         "type": "postback",
+                        //         "title": "No!",
+                        //         "payload": "no",
+                        //     }
+                        // ]
                     }]
                 }
             }
