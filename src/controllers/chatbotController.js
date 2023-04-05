@@ -206,30 +206,30 @@ function callSendAPI(sender_psid, response, kq) {
         }
         )
 
-        let responseFake = {
-            "text": `á aaaaaa~~~~~~ <3`
-        }
+        // let responseFake = {
+        //     "text": `á aaaaaa~~~~~~ <3`
+        // }
 
-        let request_body = {
-            "recipient": {
-                "id": sender_psid
-            },
-            "message": responseFake
-        }
+        // let request_body = {
+        //     "recipient": {
+        //         "id": sender_psid
+        //     },
+        //     "message": responseFake
+        // }
 
-        request({
-            "uri": "https://graph.facebook.com/v2.6/me/messages",
-            "qs": { "access_token": PAGE_ACCESS_TOKEN },
-            "method": "POST",
-            "json": request_body
-        }, (err, res, body) => {
-            if (!err) {
-                console.log('message sent')
-            } else {
-                console.log('Unable to send message: ' + err)
-            }
-        }
-        )
+        // request({
+        //     "uri": "https://graph.facebook.com/v2.6/me/messages",
+        //     "qs": { "access_token": PAGE_ACCESS_TOKEN },
+        //     "method": "POST",
+        //     "json": request_body
+        // }, (err, res, body) => {
+        //     if (!err) {
+        //         console.log('message sent')
+        //     } else {
+        //         console.log('Unable to send message: ' + err)
+        //     }
+        // }
+        // )
 
     }
 
