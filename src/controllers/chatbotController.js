@@ -80,6 +80,33 @@ function handleMessage(sender_psid, received_message) {
         response = {
             "text": `You just sending me "${received_message.text}". How cute~~`
         }
+    } else if (received_message.attachments) {
+        let attachment_url = received_message.attachments[0].payload.url;
+        response = {
+            "attachment": {
+                "type": "template",
+                "payload": {
+                    "template_type": "generic",
+                    "elements": [{
+                        "title": "Đây có phải là bức ảnh của bạn không?",
+                        "subtitle": "Nhấn nút ở dưới để",
+                        "image_url": attachment_url,
+                        "buttons": [
+                            {
+                                "type": "postback",
+                                "title": "Yes!",
+                                "payload": "yes",
+                            },
+                            {
+                                "type": "postback",
+                                "title": "No!",
+                                "payload": "no",
+                            }
+                        ]
+                    }]
+                }
+            }
+        }
     }
 
     //send the response
