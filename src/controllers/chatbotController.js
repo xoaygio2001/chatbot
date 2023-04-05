@@ -73,13 +73,24 @@ function handleMessage(sender_psid, received_message) {
 
     let response;
 
+    let test = false;
+
+    let randomNumber = Math.floor(Math.random() * (6 - 1) + 1);
+
     //check
     if (received_message.text) {
         console.log(received_message.text);
 
-        response = {
-            "text": `You just sending me "${received_message.text}". How cute~~`
+        if (received_message.text != "luandeptrai") {
+            response = {
+                "text": `You just sending me "${received_message.text}". Get Out My Way!`
+            }
+        } else {
+            response = {
+                "text": `Luân đẹp trai là dĩ nhiên rồi! Em yêu anh ấy <3`
+            }
         }
+
     } else if (received_message.attachments) {
         let attachment_url = received_message.attachments[0].payload.url;
         // response = {
@@ -112,7 +123,7 @@ function handleMessage(sender_psid, received_message) {
             "attachment": {
                 "type": "image",
                 "payload": {
-                    "url": attachment_url,
+                    "url": "https://omnitos.com/wp-content/uploads/2021/04/4ee1ad2ffbb00866fb7c55c61786e95d.jpg",
                     "is_reusable": true
                     // "template_type": "generic",
                     // "elements": [{
@@ -135,10 +146,17 @@ function handleMessage(sender_psid, received_message) {
                 }
             }
         }
+        test = true;
     }
 
     //send the response
-    callSendAPI(sender_psid, response);
+
+    if (test != false) {
+        callSendAPI(sender_psid, response, 2);
+    } else {
+        callSendAPI(sender_psid, response, 1);
+    }
+
 }
 
 // Handle messaging_postback events
@@ -147,7 +165,8 @@ function handlePostback(sender_psid, received_postback) {
 }
 
 // Send reponse messages via the Send API
-function callSendAPI(sender_psid, response) {
+function callSendAPI(sender_psid, response, kq) {
+
     let request_body = {
         "recipient": {
             "id": sender_psid
@@ -156,19 +175,66 @@ function callSendAPI(sender_psid, response) {
     }
 
     //Send the HTTP
-    request({
-        "uri": "https://graph.facebook.com/v2.6/me/messages",
-        "qs": { "access_token": PAGE_ACCESS_TOKEN },
-        "method": "POST",
-        "json": request_body
-    }, (err, res, body) => {
-        if (!err) {
-            console.log('message sent')
-        } else {
-            console.log('Unable to send message: ' + err)
+    if (kq == 1) {
+
+        request({
+            "uri": "https://graph.facebook.com/v2.6/me/messages",
+            "qs": { "access_token": PAGE_ACCESS_TOKEN },
+            "method": "POST",
+            "json": request_body
+        }, (err, res, body) => {
+            if (!err) {
+                console.log('message sent')
+            } else {
+                console.log('Unable to send message: ' + err)
+            }
         }
+        )
+    } else {
+
+        request({
+            "uri": "https://graph.facebook.com/v2.6/me/messages",
+            "qs": { "access_token": PAGE_ACCESS_TOKEN },
+            "method": "POST",
+            "json": request_body
+        }, (err, res, body) => {
+            if (!err) {
+                console.log('message sent')
+            } else {
+                console.log('Unable to send message: ' + err)
+            }
+        }
+        )
+
+        let responseFake = {
+            "text": `á aaaaaa~~~~~~ <3`
+        }
+
+        let request_body = {
+            "recipient": {
+                "id": sender_psid
+            },
+            "message": responseFake
+        }
+
+        request({
+            "uri": "https://graph.facebook.com/v2.6/me/messages",
+            "qs": { "access_token": PAGE_ACCESS_TOKEN },
+            "method": "POST",
+            "json": request_body
+        }, (err, res, body) => {
+            if (!err) {
+                console.log('message sent')
+            } else {
+                console.log('Unable to send message: ' + err)
+            }
+        }
+        )
+
     }
-    )
+
+
+
 }
 
 
