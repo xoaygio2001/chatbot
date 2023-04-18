@@ -33,6 +33,8 @@ let getWebhook = (req, res) => {
 let postWebhook = (req, res) => {
     let body = req.body
 
+    console.log('body: ' + body);
+
     // Send a 200 OK response if this is a page webhook
 
     if (body.object === "page") {
