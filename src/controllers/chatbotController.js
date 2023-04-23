@@ -99,7 +99,7 @@ async function handleMessage(sender_psid, received_message) {
                 model: "gpt-3.5-turbo",
                 messages: [{ role: "user", content: received_message.text }]
             }).then(res => {
-                console.log(res.data.choices[0].message.content);
+                // console.log(res.data.choices[0].message.content);
                 answer = res.data.choices[0].message.content;
             })
 
@@ -107,6 +107,7 @@ async function handleMessage(sender_psid, received_message) {
                 "text": answer
             }
         } catch (e) {
+            console.log('loi khuc nay')
             console.log(e)
         }
 
