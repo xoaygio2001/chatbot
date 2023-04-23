@@ -106,6 +106,9 @@ async function handleMessage(sender_psid, received_message) {
 
         try {
             console.log(received_message.text);
+
+            console.log('messenge cua fb: '+ received_message.text)
+
             let answer = await chatbot(received_message.text)
 
             console.log('da xuong day')
@@ -114,7 +117,7 @@ async function handleMessage(sender_psid, received_message) {
                 "text": answer
             }
         } catch (e) {
-            console.log(e)
+            // console.log(e)
         }
 
 
