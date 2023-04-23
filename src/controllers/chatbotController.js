@@ -108,12 +108,12 @@ async function handleMessage(sender_psid, received_message) {
             console.log(received_message.text);
             let answer = await chatbot(received_message.text)
 
+            console.log('da xuong day')
+
             response = {
                 "text": answer
             }
         } catch (e) {
-            console.log('loi khuc nay')
-            console.log(process.env.API_KEY)
             console.log(e)
         }
 
