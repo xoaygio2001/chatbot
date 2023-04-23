@@ -1,8 +1,16 @@
 require("dotenv").config();
 import request from "request";
 
+import { Configuration, OpenAIApi } from "openai";
+
+const openai = new OpenAIApi(new Configuration({
+    apiKey: process.env.API_KEY
+}))
+
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
+
+
 
 
 let getHomePage = (req, res) => {
@@ -71,7 +79,7 @@ let postWebhook = (req, res) => {
 };
 
 // Handles messages events
-function handleMessage(sender_psid, received_message) {
+async function handleMessage(sender_psid, received_message) {
 
     let response;
 
@@ -81,7 +89,17 @@ function handleMessage(sender_psid, received_message) {
 
     //check
     if (received_message.text) {
+
         console.log(received_message.text);
+        let answ
+
+        await openai.createChatCompletion({
+            model: "gpt-3.5-turbo",
+            messages: [{ role: "user", content: received_message.text }]
+        }).then(res => {
+            console.log(res.data.choices[0].message.content);
+
+        })
 
         if (received_message.text != "luandeptrai") {
             response = {
@@ -95,31 +113,6 @@ function handleMessage(sender_psid, received_message) {
 
     } else if (received_message.attachments) {
         let attachment_url = received_message.attachments[0].payload.url;
-        // response = {
-        //     "attachment": {
-        //         "type": "template",
-        //         "payload": {
-        //             "template_type": "generic",
-        //             "elements": [{
-        //                 "title": "Đây có phải là bức ảnh của bạn không?",
-        //                 "subtitle": "Nhấn nút ở dưới để",
-        //                 "image_url": attachment_url
-        //                 // "buttons": [
-        //                 //     {
-        //                 //         "type": "postback",
-        //                 //         "title": "Yes!",
-        //                 //         "payload": "yes",
-        //                 //     },
-        //                 //     {
-        //                 //         "type": "postback",
-        //                 //         "title": "No!",
-        //                 //         "payload": "no",
-        //                 //     }
-        //                 // ]
-        //             }]
-        //         }
-        //     }
-        // }
 
         response = {
             "attachment": {
@@ -127,24 +120,6 @@ function handleMessage(sender_psid, received_message) {
                 "payload": {
                     "url": "https://omnitos.com/wp-content/uploads/2021/04/4ee1ad2ffbb00866fb7c55c61786e95d.jpg",
                     "is_reusable": true
-                    // "template_type": "generic",
-                    // "elements": [{
-                    //     "title": "Đây có phải là bức ảnh của bạn không?",
-                    //     "subtitle": "Nhấn nút ở dưới để",
-                    //     "image_url": attachment_url
-                    //     // "buttons": [
-                    //     //     {
-                    //     //         "type": "postback",
-                    //     //         "title": "Yes!",
-                    //     //         "payload": "yes",
-                    //     //     },
-                    //     //     {
-                    //     //         "type": "postback",
-                    //     //         "title": "No!",
-                    //     //         "payload": "no",
-                    //     //     }
-                    //     // ]
-                    // }]
                 }
             }
         }
@@ -207,31 +182,6 @@ function callSendAPI(sender_psid, response, kq) {
             }
         }
         )
-
-        // let responseFake = {
-        //     "text": `á aaaaaa~~~~~~ <3`
-        // }
-
-        // let request_body = {
-        //     "recipient": {
-        //         "id": sender_psid
-        //     },
-        //     "message": responseFake
-        // }
-
-        // request({
-        //     "uri": "https://graph.facebook.com/v2.6/me/messages",
-        //     "qs": { "access_token": PAGE_ACCESS_TOKEN },
-        //     "method": "POST",
-        //     "json": request_body
-        // }, (err, res, body) => {
-        //     if (!err) {
-        //         console.log('message sent')
-        //     } else {
-        //         console.log('Unable to send message: ' + err)
-        //     }
-        // }
-        // )
 
     }
 
