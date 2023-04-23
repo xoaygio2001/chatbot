@@ -11,10 +11,23 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
 
+let chatbot = async (chat) => {
+    let answer;
 
+    await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: chat }]
+    }).then(res => {
+        // console.log(res.data.choices[0].message.content);
+        answer = res.data.choices[0].message.content;
+    })
+
+    return answer;
+
+}
 
 let getHomePage = (req, res) => {
-    return res.send("Xin chao");
+    return res.render('home.ejs');
 };
 
 let getWebhook = (req, res) => {
@@ -93,20 +106,12 @@ async function handleMessage(sender_psid, received_message) {
 
         try {
             console.log(received_message.text);
-            let answer;
-
-            await openai.createChatCompletion({
-                model: "gpt-3.5-turbo",
-                messages: [{ role: "user", content: received_message.text }]
-            }).then(res => {
-                // console.log(res.data.choices[0].message.content);
-                answer = res.data.choices[0].message.content;
-            })
+            let answer = await chatbot(received_message.text)
 
             response = {
                 "text": answer
             }
-        } catch (e) {            
+        } catch (e) {
             console.log('loi khuc nay')
             console.log(process.env.API_KEY)
             console.log(e)
@@ -195,6 +200,7 @@ function callSendAPI(sender_psid, response, kq) {
 module.exports = {
     getHomePage,
     getWebhook,
-    postWebhook
+    postWebhook,
+    chatbot
 
 }
