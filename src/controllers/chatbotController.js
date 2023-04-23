@@ -106,8 +106,9 @@ async function handleMessage(sender_psid, received_message) {
             response = {
                 "text": answer
             }
-        } catch (e) {
+        } catch (e) {            
             console.log('loi khuc nay')
+            console.log(process.env.API_KEY)
             console.log(e)
         }
 
