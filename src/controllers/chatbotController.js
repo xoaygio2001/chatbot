@@ -90,20 +90,26 @@ async function handleMessage(sender_psid, received_message) {
     //check
     if (received_message.text) {
 
-        console.log(received_message.text);
-        let answer;
 
-        await openai.createChatCompletion({
-            model: "gpt-3.5-turbo",
-            messages: [{ role: "user", content: received_message.text }]
-        }).then(res => {
-            console.log(res.data.choices[0].message.content);
-            answer = res.data.choices[0].message.content;
-        })
+        try {
+            console.log(received_message.text);
+            let answer;
 
-        response = {
-            "text": answer
-        }    
+            await openai.createChatCompletion({
+                model: "gpt-3.5-turbo",
+                messages: [{ role: "user", content: received_message.text }]
+            }).then(res => {
+                console.log(res.data.choices[0].message.content);
+                answer = res.data.choices[0].message.content;
+            })
+
+            response = {
+                "text": answer
+            }
+        } catch (e) {
+            console.log(e)
+        }
+
 
     } else if (received_message.attachments) {
         let attachment_url = received_message.attachments[0].payload.url;
