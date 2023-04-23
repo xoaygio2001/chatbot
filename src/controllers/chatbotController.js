@@ -91,25 +91,19 @@ async function handleMessage(sender_psid, received_message) {
     if (received_message.text) {
 
         console.log(received_message.text);
-        let answ
+        let answer;
 
         await openai.createChatCompletion({
             model: "gpt-3.5-turbo",
             messages: [{ role: "user", content: received_message.text }]
         }).then(res => {
             console.log(res.data.choices[0].message.content);
-
+            answer = res.data.choices[0].message.content;
         })
 
-        if (received_message.text != "luandeptrai") {
-            response = {
-                "text": `You just sending me "${received_message.text}". Get Out My Way!`
-            }
-        } else {
-            response = {
-                "text": `Luân đẹp trai là dĩ nhiên rồi! Em yêu anh ấy <3`
-            }
-        }
+        response = {
+            "text": answer
+        }    
 
     } else if (received_message.attachments) {
         let attachment_url = received_message.attachments[0].payload.url;
