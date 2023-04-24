@@ -132,7 +132,7 @@ async function handleMessage(sender_psid, received_message) {
                 "text": answer
             }
         } catch (e) {
-            // console.log(e)
+            console.log(e)
         }
 
 
