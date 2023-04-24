@@ -11,19 +11,33 @@ const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
 const VERIFY_TOKEN = process.env.VERIFY_TOKEN;
 
 
-let chatbot = async (chat) => {
-    let answer;
+let chatbot = (chat) => {
 
-    await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: chat }]
-    }).then(res => {
-        // console.log(res.data.choices[0].message.content);
-        answer = res.data.choices[0].message.content;
+    return new Promise(async (resolve, reject) => {
+
+        try {
+            let answer;
+            await openai.createChatCompletion({
+                model: "gpt-3.5-turbo",
+                messages: [{ role: "user", content: chat }]
+            }).then(res => {
+                answer = res.data.choices[0].message.content;
+            })
+            // console.log(answer)
+            resolve({
+                data: answer,
+                errCode: 1
+            })
+        } catch (e) {
+            reject(e);
+        }
     })
 
-    return answer;
+}
 
+let chatbotfake = async () => {
+    let a = await chatbot('hello');
+    console.log(a.data)
 }
 
 let getHomePage = (req, res) => {
@@ -105,9 +119,10 @@ async function handleMessage(sender_psid, received_message) {
 
 
         try {
+
             console.log(received_message.text);
 
-            console.log('messenge cua fb: '+ received_message.text)
+            console.log('messenge cua fb: ' + received_message.text)
 
             let answer = await chatbot(received_message.text)
 
@@ -204,6 +219,7 @@ module.exports = {
     getHomePage,
     getWebhook,
     postWebhook,
-    chatbot
+    chatbot,
+    chatbotfake
 
 }
